@@ -4,14 +4,15 @@ import { MetamaskActions, MetaMaskContext } from '../hooks';
 import {
   connectSnap,
   getSnap,
-  sendHello,
   shouldDisplayReconnectButton,
+  sendContractTransaction,
+  TransactionConstants,
 } from '../utils';
 import {
   ConnectButton,
   InstallFlaskButton,
   ReconnectButton,
-  SendHelloButton,
+  SendTxButton,
   Card,
 } from '../components';
 
@@ -117,14 +118,17 @@ const Index = () => {
     }
   };
 
-  const handleSendHelloClick = async () => {
+  const handleSendTxClick = async () => {
     try {
-      await sendHello();
+      await sendContractTransaction(
+        TransactionConstants.UpdateWithdrawalAccount,
+      );
     } catch (e) {
       console.error(e);
       dispatch({ type: MetamaskActions.SetError, payload: e });
     }
   };
+  console.log('state', state);
 
   return (
     <Container>
@@ -185,14 +189,10 @@ const Index = () => {
         )}
         <Card
           content={{
-            title: 'Send Hello message',
-            description:
-              'Display a custom message within a confirmation screen in MetaMask.',
+            title: 'Send contract Tx',
+            description: 'Display some insight data in Metamask.',
             button: (
-              <SendHelloButton
-                onClick={handleSendHelloClick}
-                disabled={false}
-              />
+              <SendTxButton onClick={handleSendTxClick} disabled={false} />
             ),
           }}
           disabled={false}

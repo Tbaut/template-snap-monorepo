@@ -11,7 +11,7 @@ import {
   ConnectButton,
   InstallFlaskButton,
   ReconnectButton,
-  SendHelloButton,
+  SendTxButton,
 } from './Buttons';
 import { Card } from './Card';
 
@@ -189,10 +189,7 @@ export const Home = () => {
             description:
               'Display a custom message within a confirmation screen in MetaMask.',
             button: (
-              <SendHelloButton
-                onClick={handleSendHelloClick}
-                disabled={false}
-              />
+              <SendTxButton onClick={handleSendHelloClick} disabled={false} />
             ),
           }}
           disabled={false}
