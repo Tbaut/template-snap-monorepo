@@ -22,6 +22,12 @@ export type IContractTransactionCountScore = {
   contractAddress: string;
 };
 
+export type IContractUserTxScore = {
+  chainId: string;
+  contractAddress: string;
+  userAddress: string;
+};
+
 export type IgetEtherscanContractTxs = {
   txNumber: number;
 } & IContractTransactionCountScore;
@@ -30,4 +36,9 @@ export type EtherScanResponse = {
   status: string;
   message: string;
   result: any[];
+};
+
+export type CalculateOverallScoreWithWeightArgs = {
+  contractTransactionCountScore: ScoreResult;
+  contractUserTransactionScore: ScoreResult;
 };

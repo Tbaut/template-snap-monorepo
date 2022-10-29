@@ -4,6 +4,7 @@ import { apiKey, etherscanUrls } from './constants';
 import {
   EtherScanResponse,
   IContractTransactionCountScore,
+  IContractUserTxScore,
   IgetEtherscanContractTxs,
   ScoreResult,
 } from './types';
@@ -35,6 +36,64 @@ const getEtherscanContractTxs = ({
 }: IgetEtherscanContractTxs) => {
   return `${etherscanUrls[chainId]}api?module=account&action=txlist&address=${contractAddress}&startblock=0&endblock=99999999&sort=asc&apikey=${apiKey}&page=${txNumber}&offset=1`;
 };
+
+const getEtherscanUserTxs = ({
+  userAddress,
+  chainId,
+}: IContractUserTxScore) => {
+  return `${etherscanUrls[chainId]}api?module=account&action=txlist&address=${userAddress}&startblock=0&endblock=99999999&sort=asc&apikey=${apiKey}`;
+};
+
+/**
+ * Gets a trust score for a contract based on previous user interactions
+ * 3 -> 5 txs or more
+ * 2 -> 1 < tx < 5
+ * 1 -> tx < 1
+ *
+ *@param options0
+ * @param options0.chainId - the chainid to call etherscan with
+ * @param options0.contractAddress - the contract address to check
+ * @param options0.userAddress - the user address
+ * @returns the score and a description
+ */
+export async function getContractInteractionScore({
+  chainId,
+  contractAddress,
+  userAddress,
+}: IContractUserTxScore): Promise<ScoreResult> {
+  const url = getEtherscanUserTxs({
+    userAddress,
+    chainId,
+    contractAddress,
+  });
+  const result = await getResults(url);
+
+  const interactionCount: number = result.reduce(
+    (acc: number, curr: Record<string, string>) => {
+      return acc + (curr.to === contractAddress ? 1 : 0);
+    },
+    0,
+  );
+
+  if (interactionCount > 5) {
+    return {
+      score: 3,
+      description: 'more than 5 interactions',
+    };
+  }
+
+  if (interactionCount > 1) {
+    return {
+      score: 2,
+      description: 'more than 1 interaction',
+    };
+  }
+
+  return {
+    score: 1,
+    description: 'less than 2 txs',
+  };
+}
 
 /**
  * Gets a trust score for a contract
