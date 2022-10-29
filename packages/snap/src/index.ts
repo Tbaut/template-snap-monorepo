@@ -1,5 +1,6 @@
 import { OnTransactionHandler } from '@metamask/snap-types';
 import {
+  getContractAgeScore,
   getContractInteractionScore,
   getContractTransactionCountScore,
 } from './insights';
@@ -22,11 +23,13 @@ const getColor = (result: number) => {
 const Weights = {
   contractUserTransactionScore: 1,
   contractTransactionCountScore: 3,
+  contractAgeScore: 2,
 };
 
 const calculateOverallScoreWithWeight = ({
   contractTransactionCountScore,
   contractUserTransactionScore,
+  contractAgeScore,
 }: CalculateOverallScoreWithWeightArgs) => {
   const totalWeitght = Object.values(Weights).reduce(
     (acc: number, curr: number) => acc + curr,
@@ -38,7 +41,8 @@ const calculateOverallScoreWithWeight = ({
   const overallScoreWithWeight =
     (contractUserTransactionScore.score * Weights.contractUserTransactionScore +
       contractTransactionCountScore.score *
-        Weights.contractTransactionCountScore) /
+        Weights.contractTransactionCountScore +
+      contractAgeScore.score * Weights.contractAgeScore) /
     totalWeitght;
 
   console.log('overallScoreWithWeight', overallScoreWithWeight);
@@ -64,9 +68,15 @@ export const onTransaction: OnTransactionHandler = async ({
     userAddress: (transaction as TransactionObject).from,
   });
 
+  const contractAgeScore = await getContractAgeScore({
+    chainId,
+    contractAddress: (transaction as TransactionObject).to,
+  });
+
   const overallScore = calculateOverallScoreWithWeight({
     contractTransactionCountScore,
     contractUserTransactionScore,
+    contractAgeScore,
   });
 
   return {
@@ -79,6 +89,9 @@ export const onTransaction: OnTransactionHandler = async ({
       'Previous interractions': `${getColor(
         contractUserTransactionScore.score,
       )} ${contractUserTransactionScore.description}`,
+      'Contract age': `${getColor(contractAgeScore.score)} ${
+        contractAgeScore.description
+      }`,
     },
   };
 };
