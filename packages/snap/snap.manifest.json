@@ -1,13 +1,13 @@
 {
   "version": "0.1.0",
-  "description": "An example Snap written in TypeScript.",
-  "proposedName": "TypeScript Example Snap",
+  "description": "A snap giving trust score insights into a tx",
+  "proposedName": "Trust score",
   "repository": {
     "type": "git",
     "url": "https://github.com/MetaMask/template-snap-monorepo.git"
   },
   "source": {
-    "shasum": "5+OQmF+ggpakjj6yzcsB5ZuCpsYM2wNc4kjUHAD9uEM=",
+    "shasum": "xcAFRn5nrLAZrenvXuUgk6RE1CDKceXckkiWGJ1Vvfg=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",

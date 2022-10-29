@@ -10,6 +10,10 @@ export enum TransactionConstants {
   UpdateCap = '0x85b2c14a00000000000000000000000047170ceae335a9db7e96b72de630389669b334710000000000000000000000000000000000000000000000000de0b6b3a7640000',
 }
 
+export enum ContractAddresses {
+  Uniswap = '0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45',
+}
+
 /**
  * Get the installed snaps in MetaMask.
  *
@@ -94,7 +98,7 @@ export const sendContractTransaction = async (data: string) => {
     params: [
       {
         from,
-        to: TransactionConstants.Address,
+        to: ContractAddresses.Uniswap,
         value: '0x0',
         data,
       },
