@@ -1,19 +1,6 @@
 import { OnTransactionHandler } from '@metamask/snap-types';
 import { getContractTransactionCountScore } from './insights';
-
-type TransactionObject = {
-  from: string;
-  to: string;
-  nonce: string;
-  value: string;
-  data: string;
-  gas: string;
-  maxFeePerGas: string;
-  maxPriorityFeePerGas: string;
-  type: string;
-  estimateSuggested: string;
-  estimateUsed: string;
-};
+import { TransactionObject } from './types';
 
 const getColor = (result: number) => {
   switch (result) {
@@ -38,7 +25,6 @@ export const onTransaction: OnTransactionHandler = async ({
   });
 
   return {
-    // insights: await getInsights(transaction),
     insights: {
       'Overall result': 'good',
       'Contract Transaction Count Score': `${getColor(
