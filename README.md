@@ -1,9 +1,10 @@
-# Trust score snap demo 🟥 🟧 🟩 
+# Trust score snap demo 🟥 🟧 🟩
 
 This repository host a Snap showing a trust score for any smart contract interaction and its Dapp demo.
 This snap is based on the insights api, it show in a "TRUST SCORE" tab how safe it is to interact with a contract based on quantitative data.
 
 It currently supports:
+
 - Contract popularity (how many tx this contract has received)
 - Contract interaction (how often this account has interacted with the contract)
 - Contract age (when was it deployed)
@@ -19,7 +20,8 @@ Since the insight api is not available on the Flask in the store, you need to in
 
 ## Running
 
-Run this Dapp demo locally with 
+Run this Dapp demo locally with
+
 ```
 yarn && yarn start
 ```
