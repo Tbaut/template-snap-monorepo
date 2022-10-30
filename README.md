@@ -11,6 +11,8 @@ It currently supports:
 
 Weights are applied to the above criterias because they are not all at the same level.
 
+![Selection_1010](https://user-images.githubusercontent.com/33178835/198859048-b75ff3be-72a3-4b2a-917d-65d8a947aecb.png)
+
 ## Only works with pre-release Flask
 
 Since the insight api is not available on the Flask in the store, you need to install the custom build [from here](https://github.com/rekmarks/metamask-extension/releases/tag/devcon-vi)
