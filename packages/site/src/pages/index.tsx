@@ -1,19 +1,8 @@
 import { useContext } from 'react';
 import styled from 'styled-components';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
-import {
-  // connectSnap,
-  // getSnap,
-  // shouldDisplayReconnectButton,
-  sendContractTransaction,
-} from '../utils';
-import {
-  // ConnectButton,
-  // InstallFlaskButton,
-  // ReconnectButton,
-  SendTxButton,
-  Card,
-} from '../components';
+import { sendContractTransaction } from '../utils';
+import { SendTxButton, Card } from '../components';
 
 const Container = styled.div`
   display: flex;
@@ -41,16 +30,6 @@ const Span = styled.span`
   color: ${(props) => props.theme.colors.primary.default};
 `;
 
-// const Subtitle = styled.p`
-//   font-size: ${({ theme }) => theme.fontSizes.large};
-//   font-weight: 500;
-//   margin-top: 0;
-//   margin-bottom: 0;
-//   ${({ theme }) => theme.mediaQueries.small} {
-//     font-size: ${({ theme }) => theme.fontSizes.text};
-//   }
-// `;
-
 const CardContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -61,25 +40,6 @@ const CardContainer = styled.div`
   height: 100%;
   margin-top: 1.5rem;
 `;
-
-// const Notice = styled.div`
-//   background-color: ${({ theme }) => theme.colors.background.alternative};
-//   border: 1px solid ${({ theme }) => theme.colors.border.default};
-//   color: ${({ theme }) => theme.colors.text.alternative};
-//   border-radius: ${({ theme }) => theme.radii.default};
-//   padding: 2.4rem;
-//   margin-top: 2.4rem;
-//   max-width: 60rem;
-//   width: 100%;
-
-//   & > * {
-//     margin: 0;
-//   }
-//   ${({ theme }) => theme.mediaQueries.small} {
-//     margin-top: 1.2rem;
-//     padding: 1.6rem;
-//   }
-// `;
 
 const ErrorMessage = styled.div`
   background-color: ${({ theme }) => theme.colors.error.muted};
@@ -116,21 +76,6 @@ export enum ContractAddresses {
 const Index = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
 
-  // const handleConnectClick = async () => {
-  //   try {
-  //     await connectSnap();
-  //     const installedSnap = await getSnap();
-
-  //     dispatch({
-  //       type: MetamaskActions.SetInstalled,
-  //       payload: installedSnap,
-  //     });
-  //   } catch (e) {
-  //     console.error(e);
-  //     dispatch({ type: MetamaskActions.SetError, payload: e });
-  //   }
-  // };
-
   const handleSendTxClick = async (address: string, data: string) => {
     try {
       await sendContractTransaction(address, data);
@@ -152,49 +97,6 @@ const Index = () => {
             <b>An error happened:</b> {state.error.message}
           </ErrorMessage>
         )}
-        {/* {!state.isFlask && (
-          <Card
-            content={{
-              title: 'Install',
-              description:
-                'Snaps is pre-release software only available in MetaMask Flask, a canary distribution for developers with access to upcoming features.',
-              button: <InstallFlaskButton />,
-            }}
-            fullWidth
-          />
-        )}
-        {!state.installedSnap && (
-          <Card
-            content={{
-              title: 'Connect',
-              description:
-                'Get started by connecting to and installing the example snap.',
-              button: (
-                <ConnectButton
-                  onClick={handleConnectClick}
-                  disabled={!state.isFlask}
-                />
-              ),
-            }}
-            disabled={!state.isFlask}
-          />
-        )}
-        {shouldDisplayReconnectButton(state.installedSnap) && (
-          <Card
-            content={{
-              title: 'Reconnect',
-              description:
-                'While connected to a local running snap this button will always be displayed in order to update the snap if a change is made.',
-              button: (
-                <ReconnectButton
-                  onClick={handleConnectClick}
-                  disabled={!state.installedSnap}
-                />
-              ),
-            }}
-            disabled={!state.installedSnap}
-          />
-        )} */}
         <Card
           content={{
             title: 'Send Uniswap contract Tx',
@@ -234,14 +136,6 @@ const Index = () => {
           disabled={false}
           fullWidth={false}
         />
-        {/* <Notice>
-          <p>
-            Please note that the <b>snap.manifest.json</b> and{' '}
-            <b>package.json</b> must be located in the server root directory and
-            the bundle must be hosted at the location specified by the location
-            field.
-          </p>
-        </Notice> */}
       </CardContainer>
     </Container>
   );
