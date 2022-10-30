@@ -26,6 +26,10 @@
     "serve": "mm-snap serve",
     "start": "mm-snap watch"
   },
+  "dependencies": {
+    "@metamask/abi-utils": "^1.1.0",
+    "@metamask/utils": "^3.2.0"
+  },
   "devDependencies": {
     "@lavamoat/allow-scripts": "^2.0.3",
     "@metamask/auto-changelog": "^2.6.0",
@@ -56,9 +60,5 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
-  },
-  "dependencies": {
-    "@metamask/abi-utils": "^1.1.0",
-    "@metamask/utils": "^3.2.0"
   }
 }
