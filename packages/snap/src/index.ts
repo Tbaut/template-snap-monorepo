@@ -96,7 +96,7 @@ export const onTransaction: OnTransactionHandler = async ({
       'Contract popularity': `${getColor(
         contractTransactionCountScore.score,
       )} ${contractTransactionCountScore.description}`,
-      'Previous interractions': `${getColor(
+      'Previous interactions': `${getColor(
         contractUserTransactionScore.score,
       )} ${contractUserTransactionScore.description}`,
       'Contract age': `${getColor(contractAgeScore.score)} ${

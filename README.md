@@ -1,6 +1,6 @@
 # Trust score snap demo 🟥 🟧 🟩 
 
-This repository host a Snap showing a trust score for any smart contract interraction and its Dapp demo.
+This repository host a Snap showing a trust score for any smart contract interaction and its Dapp demo.
 This snap is based on the insights api, it show in a "TRUST SCORE" tab how safe it is to interact with a contract based on quantitative data.
 
 It currently supports:
@@ -24,7 +24,7 @@ Run this Dapp demo locally with
 yarn && yarn start
 ```
 
-Visit http://localhost:8000/ and connect your Flask to Goerli testnet. The interface allows you to interract with 2 types of contract. A very used, and old Uniswap router contract. And a new, and barely ever used Storage contract.
+Visit http://localhost:8000/ and connect your Flask to Goerli testnet. The interface allows you to interact with 2 types of contract. A very used, and old Uniswap router contract. And a new, and barely ever used Storage contract.
 
 ## Contributing
 
