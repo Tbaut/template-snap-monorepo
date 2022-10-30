@@ -1,30 +1,28 @@
-# @metamask/template-snap-monorepo
+# Trust score snap demo 🟥 🟧 🟩 
 
-This repository demonstrates how to develop a snap with TypeScript. For detailed instructions, see [the MetaMask documentation](https://docs.metamask.io/guide/snaps.html#serving-a-snap-to-your-local-environment).
+This repository host a Snap showing a trust score for any smart contract interraction and its Dapp demo.
+This snap is based on the insights api, it show in a "TRUST SCORE" tab how safe it is to interact with a contract based on quantitative data.
 
-MetaMask Snaps is a system that allows anyone to safely expand the capabilities of MetaMask. A _snap_ is a program that we run in an isolated environment that can customize the wallet experience.
+It currently supports:
+- Contract popularity (how many tx this contract has received)
+- Contract interaction (how often this account has interacted with the contract)
+- Contract age (when was it deployed)
+- Contract Etherscan verification
 
-## Snaps is pre-release software
+Weights are applied to the above criterias because they are not all at the same level.
 
-To interact with (your) Snaps, you will need to install [MetaMask Flask](https://metamask.io/flask/), a canary distribution for developers that provides access to upcoming features.
+## Only works with pre-release Flask
 
-## Getting Started
+Since the insight api is not available on the Flask in the store, you need to install the custom build [from here](https://github.com/rekmarks/metamask-extension/releases/tag/devcon-vi)
 
-Clone the template-snap repository [using this template](https://github.com/MetaMask/template-snap-monorepo/generate) and setup the development environment:
+## Running
 
-```shell
-yarn install && yarn start
+Run this Dapp demo locally with 
+```
+yarn && yarn start
 ```
 
-## Cloning
-
-This repository contains GitHub Actions that you may find useful, see `.github/workflows` and [Releasing & Publishing](https://github.com/MetaMask/template-snap-monorepo/edit/main/README.md#releasing--publishing) below for more information.
-
-If you clone or create this repository outside the MetaMask GitHub organization, you probably want to run `./scripts/cleanup.sh` to remove some files that will not work properly outside the MetaMask GitHub organization.
-
-Note that the `action-publish-relase.yml` workflow contains a step that publishes the frontend of this snap (contained in the `public/` directory) to GitHub pages. If you do not want to publish the frontend to GitHub pages, simply remove the step named "Publish to GitHub Pages" in that workflow.
-
-If you don't wish to use any of the existing GitHub actions in this repository, simply delete the `.github/workflows` directory.
+Visit http://localhost:8000/ and connect your Flask to Goerli testnet. The interface allows you to interract with 2 types of contract. A very used, and old Uniswap router contract. And a new, and barely ever used Storage contract.
 
 ## Contributing
 
