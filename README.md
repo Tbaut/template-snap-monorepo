@@ -11,7 +11,7 @@ It currently supports:
 
 Weights are applied to the above criterias because they are not all at the same level.
 
-![Selection_1010](https://user-images.githubusercontent.com/33178835/198859048-b75ff3be-72a3-4b2a-917d-65d8a947aecb.png)
+![image](https://user-images.githubusercontent.com/33178835/198859158-2b659ead-4b91-49a3-a1eb-044d7990e3bf.png)
 
 ## Only works with pre-release Flask
 
