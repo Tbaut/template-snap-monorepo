@@ -6,11 +6,12 @@ import {
   IContractAgeScore,
   IContractTransactionCountScore,
   IContractUserTxScore,
+  IContractVerifiedScore,
   IgetEtherscanContractTxs,
   ScoreResult,
 } from './types';
 
-const getResults = async (url: string) => {
+const fetchUrl = async (url: string) => {
   const response = await fetch(url, {
     method: 'get',
     headers: {
@@ -24,16 +25,21 @@ const getResults = async (url: string) => {
     );
   }
 
-  // The response is an array of objects, each with a "text_signature" property.
-  const { result } = (await response.json()) as EtherScanResponse;
+  const { result, status } = (await response.json()) as EtherScanResponse;
 
-  return result;
+  return {
+    result,
+    status,
+  };
 };
 
-// getEtherscanVerificationStatus = https://api-goerli.etherscan.io/api?module=contract&action=getabi&address=0x0a2C2c75BbF27B45C92E3eF7F7ddFcC0720FDf66
-// .status
+const getEtherscanVerificationUrl = ({
+  chainId,
+  contractAddress,
+}: IContractVerifiedScore) => {
+  return `${etherscanUrls[chainId]}api?module=contract&action=getabi&address=${contractAddress}&apikey=${apiKey}`;
+};
 
-//
 const getEtherscanContractAgeUrl = ({
   chainId,
   contractAddress,
@@ -56,18 +62,11 @@ const getEtherscanUserTxsUrl = ({
   return `${etherscanUrls[chainId]}api?module=account&action=txlist&address=${userAddress}&startblock=0&endblock=99999999&sort=asc&apikey=${apiKey}`;
 };
 
-// const getEtherscanContractInfoUrl = ({
-//   userAddress,
-//   chainId,
-// }: IContractUserTxScore) => {
-//   return `${etherscanUrls[chainId]}api?module=account&action=txlist&address=${userAddress}&startblock=0&endblock=99999999&sort=asc&apikey=${apiKey}`;
-// };
-
 /**
  * Gets a trust score for a contract based on previous user interactions
  * 3 -> 5 txs or more
  * 2 -> 1 < tx < 5
- * 1 -> tx < 1
+ * 1 -> tx < 2
  *
  *@param options0
  * @param options0.chainId - the chainid to call etherscan with
@@ -85,7 +84,7 @@ export async function getContractInteractionScore({
     chainId,
     contractAddress,
   });
-  const result = await getResults(url);
+  const { result } = await fetchUrl(url);
 
   const interactionCount: number = result.reduce(
     (acc: number, curr: Record<string, string>) => {
@@ -134,7 +133,7 @@ export async function getContractTransactionCountScore({
     chainId,
     contractAddress,
   });
-  const result100 = await getResults(url100);
+  const { result: result100 } = await fetchUrl(url100);
 
   // if there is a 100th tx
   if (result100.length === 1) {
@@ -149,7 +148,7 @@ export async function getContractTransactionCountScore({
     chainId,
     contractAddress,
   });
-  const result50 = await getResults(url50);
+  const { result: result50 } = await fetchUrl(url50);
 
   // if there is a 50th tx
   if (result50.length === 1) {
@@ -184,7 +183,7 @@ export async function getContractAgeScore({
     chainId,
     contractAddress,
   });
-  const result = await getResults(url);
+  const { result } = await fetchUrl(url);
 
   const timeSinceCreation = new Date().getTime() / 1000 - result[0].timeStamp;
 
@@ -211,5 +210,38 @@ export async function getContractAgeScore({
   return {
     score: 1,
     description: 'less than 1 month old',
+  };
+}
+
+/**
+ * Gets a trust score for a contract verification
+ * 3 -> contract is verified
+ * 1 -> contract is not verified
+ *
+ *@param options0
+ * @param options0.chainId - the chainid to call etherscan with
+ * @param options0.contractAddress - the contract address to check
+ * @returns the score and a description
+ */
+export async function getContractVerificationScore({
+  chainId,
+  contractAddress,
+}: IContractAgeScore): Promise<ScoreResult> {
+  const url = getEtherscanVerificationUrl({
+    chainId,
+    contractAddress,
+  });
+  const { status } = await fetchUrl(url);
+
+  if (Number(status) === 1) {
+    return {
+      score: 3,
+      description: 'verified',
+    };
+  }
+
+  return {
+    score: 1,
+    description: 'not verified',
   };
 }

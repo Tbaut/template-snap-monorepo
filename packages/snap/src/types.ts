@@ -24,6 +24,8 @@ export type IContractTransactionCountScore = {
 
 export type IContractAgeScore = IContractTransactionCountScore;
 
+export type IContractVerifiedScore = IContractTransactionCountScore;
+
 export type IContractUserTxScore = {
   chainId: string;
   contractAddress: string;
@@ -44,4 +46,5 @@ export type CalculateOverallScoreWithWeightArgs = {
   contractTransactionCountScore: ScoreResult;
   contractUserTransactionScore: ScoreResult;
   contractAgeScore: ScoreResult;
+  contractVerificationScore: ScoreResult;
 };

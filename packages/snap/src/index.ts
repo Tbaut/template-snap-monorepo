@@ -3,6 +3,7 @@ import {
   getContractAgeScore,
   getContractInteractionScore,
   getContractTransactionCountScore,
+  getContractVerificationScore,
 } from './insights';
 import {
   CalculateOverallScoreWithWeightArgs,
@@ -24,12 +25,14 @@ const Weights = {
   contractUserTransactionScore: 1,
   contractTransactionCountScore: 3,
   contractAgeScore: 2,
+  contractVerificationScore: 1,
 };
 
 const calculateOverallScoreWithWeight = ({
   contractTransactionCountScore,
   contractUserTransactionScore,
   contractAgeScore,
+  contractVerificationScore,
 }: CalculateOverallScoreWithWeightArgs) => {
   const totalWeitght = Object.values(Weights).reduce(
     (acc: number, curr: number) => acc + curr,
@@ -42,7 +45,8 @@ const calculateOverallScoreWithWeight = ({
     (contractUserTransactionScore.score * Weights.contractUserTransactionScore +
       contractTransactionCountScore.score *
         Weights.contractTransactionCountScore +
-      contractAgeScore.score * Weights.contractAgeScore) /
+      contractAgeScore.score * Weights.contractAgeScore +
+      contractVerificationScore.score * Weights.contractVerificationScore) /
     totalWeitght;
 
   console.log('overallScoreWithWeight', overallScoreWithWeight);
@@ -73,10 +77,16 @@ export const onTransaction: OnTransactionHandler = async ({
     contractAddress: (transaction as TransactionObject).to,
   });
 
+  const contractVerificationScore = await getContractVerificationScore({
+    chainId,
+    contractAddress: (transaction as TransactionObject).to,
+  });
+
   const overallScore = calculateOverallScoreWithWeight({
     contractTransactionCountScore,
     contractUserTransactionScore,
     contractAgeScore,
+    contractVerificationScore,
   });
 
   return {
@@ -91,6 +101,9 @@ export const onTransaction: OnTransactionHandler = async ({
       )} ${contractUserTransactionScore.description}`,
       'Contract age': `${getColor(contractAgeScore.score)} ${
         contractAgeScore.description
+      }`,
+      'Contract verification': `${getColor(contractVerificationScore.score)} ${
+        contractVerificationScore.description
       }`,
     },
   };
