@@ -1,17 +1,19 @@
 /* eslint-disable jsdoc/match-description */
 /* eslint-disable jsdoc/require-param-description */
-import { apiKey, etherscanUrls } from './constants';
+import { apiKey, etherscanUrls, sourcifyBaseUrl } from './constants';
 import {
-  EtherScanResponse,
+  EtherscanResponse,
   IContractAgeScore,
   IContractTransactionCountScore,
   IContractUserTxScore,
   IContractVerifiedScore,
   IgetEtherscanContractTxs,
   ScoreResult,
+  SourcifyResponse,
 } from './types';
+import { getEIP155ChainId } from './utils';
 
-const fetchUrl = async (url: string) => {
+const fetchUrl = async <T>(url: string): Promise<T> => {
   const response = await fetch(url, {
     method: 'get',
     headers: {
@@ -25,12 +27,9 @@ const fetchUrl = async (url: string) => {
     );
   }
 
-  const { result, status } = (await response.json()) as EtherScanResponse;
+  const res = (await response.json()) as T;
 
-  return {
-    result,
-    status,
-  };
+  return res;
 };
 
 const getEtherscanVerificationUrl = ({
@@ -62,6 +61,14 @@ const getEtherscanUserTxsUrl = ({
   return `${etherscanUrls[chainId]}api?module=account&action=txlist&address=${userAddress}&startblock=0&endblock=99999999&sort=asc&apikey=${apiKey}`;
 };
 
+const getSourcifyVerificationUrl = ({
+  chainId,
+  contractAddress,
+}: IContractVerifiedScore) => {
+  const chainIdEIP155 = getEIP155ChainId(chainId);
+  return `${sourcifyBaseUrl}check-by-addresses?addresses=${contractAddress}&chainIds=${chainIdEIP155}`;
+};
+
 /**
  * Gets a trust score for a contract based on previous user interactions
  * 3 -> 5 txs or more
@@ -84,7 +91,7 @@ export async function getContractInteractionScore({
     chainId,
     contractAddress,
   });
-  const { result } = await fetchUrl(url);
+  const { result } = await fetchUrl<EtherscanResponse>(url);
 
   const interactionCount: number = result.reduce(
     (acc: number, curr: Record<string, string>) => {
@@ -133,7 +140,7 @@ export async function getContractTransactionCountScore({
     chainId,
     contractAddress,
   });
-  const { result: result100 } = await fetchUrl(url100);
+  const { result: result100 } = await fetchUrl<EtherscanResponse>(url100);
 
   // if there is a 100th tx
   if (result100.length === 1) {
@@ -148,7 +155,7 @@ export async function getContractTransactionCountScore({
     chainId,
     contractAddress,
   });
-  const { result: result50 } = await fetchUrl(url50);
+  const { result: result50 } = await fetchUrl<EtherscanResponse>(url50);
 
   // if there is a 50th tx
   if (result50.length === 1) {
@@ -183,12 +190,9 @@ export async function getContractAgeScore({
     chainId,
     contractAddress,
   });
-  const { result } = await fetchUrl(url);
+  const { result } = await fetchUrl<EtherscanResponse>(url);
 
   const timeSinceCreation = new Date().getTime() / 1000 - result[0].timeStamp;
-
-  console.log(' result[0].timeStamp', result[0].timeStamp);
-  console.log('timeSinceCreation', timeSinceCreation);
 
   const oneMonth = 3600 * 24 * 30;
   const twoMonths = oneMonth * 2;
@@ -227,16 +231,41 @@ export async function getContractVerificationScore({
   chainId,
   contractAddress,
 }: IContractAgeScore): Promise<ScoreResult> {
-  const url = getEtherscanVerificationUrl({
+  const etherscanUrl = getEtherscanVerificationUrl({
     chainId,
     contractAddress,
   });
-  const { status } = await fetchUrl(url);
+  const { status: etherscanStatus } = await fetchUrl<EtherscanResponse>(
+    etherscanUrl,
+  );
 
-  if (Number(status) === 1) {
+  const isEtherscanVerified = Number(etherscanStatus) === 1;
+  const sourcifyUrl = getSourcifyVerificationUrl({
+    chainId,
+    contractAddress,
+  });
+
+  const sourcifyRes = await fetchUrl<SourcifyResponse>(sourcifyUrl);
+  const isSourcifyVerified = sourcifyRes[0].status === 'perfect';
+
+  if (isSourcifyVerified && isEtherscanVerified) {
     return {
       score: 3,
       description: 'verified',
+    };
+  }
+
+  if (!isEtherscanVerified) {
+    return {
+      score: 2,
+      description: 'not verified on Etherscan',
+    };
+  }
+
+  if (!isSourcifyVerified) {
+    return {
+      score: 2,
+      description: 'not verified on Sourcify',
     };
   }
 

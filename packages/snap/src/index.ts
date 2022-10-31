@@ -39,8 +39,6 @@ const calculateOverallScoreWithWeight = ({
     0,
   );
 
-  console.log('total weight', totalWeitght);
-
   const overallScoreWithWeight =
     (contractUserTransactionScore.score * Weights.contractUserTransactionScore +
       contractTransactionCountScore.score *
@@ -49,11 +47,6 @@ const calculateOverallScoreWithWeight = ({
       contractVerificationScore.score * Weights.contractVerificationScore) /
     totalWeitght;
 
-  console.log('overallScoreWithWeight', overallScoreWithWeight);
-  console.log(
-    'Math.floor(overallScoreWithWeight)',
-    Math.floor(overallScoreWithWeight),
-  );
   return Math.floor(overallScoreWithWeight);
 };
 
