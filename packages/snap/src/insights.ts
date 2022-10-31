@@ -109,7 +109,7 @@ export async function getContractInteractionScore({
 
   return {
     score: 1,
-    description: 'less than 2 txs',
+    description: 'fewer than 2 txs',
   };
 }
 
@@ -160,7 +160,7 @@ export async function getContractTransactionCountScore({
 
   return {
     score: 1,
-    description: 'less than 49 txs',
+    description: 'fewer than 49 txs',
   };
 }
 
