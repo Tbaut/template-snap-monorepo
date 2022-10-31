@@ -36,11 +36,17 @@ export type IgetEtherscanContractTxs = {
   txNumber: number;
 } & IContractTransactionCountScore;
 
-export type EtherScanResponse = {
+export type EtherscanResponse = {
   status: string;
   message: string;
   result: any[];
 };
+
+export type SourcifyResponse = {
+  status: string;
+  chainIds: string[];
+  address: string;
+}[];
 
 export type CalculateOverallScoreWithWeightArgs = {
   contractTransactionCountScore: ScoreResult;

@@ -8,11 +8,11 @@ It currently supports:
 - Contract popularity (how many tx this contract has received)
 - Contract interaction (how often this account has interacted with the contract)
 - Contract age (when was it deployed)
-- Contract Etherscan verification
+- Contract verification on Sourcify and Etherscan
 
 Weights are applied to the above criterias because they are not all at the same level.
 
-![image](https://user-images.githubusercontent.com/33178835/198859158-2b659ead-4b91-49a3-a1eb-044d7990e3bf.png)
+![Metamask insights screenshot](https://user-images.githubusercontent.com/33178835/199010793-25a807a5-e14d-466d-acb6-4d3d7290dcaa.png)
 
 ## Only works with pre-release Flask
 
